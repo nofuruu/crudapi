@@ -20,6 +20,25 @@
                 </a>
             </div>
             <div class="table-responsive">
+                <div class="container mt-4 mb-4" id="filterTab" style="display: none;">
+                    <div class="body mb-3">
+                        <div class="container">
+                            <form id="filter" class="d-flex align-items-end gap-3 flex-wrap">
+                                <div class="form-group">
+                                    <label for="from_date">Dari Tanggal</label>
+                                    <input type="date" class="form-control" name="from_date" id="from_date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="to_date">Sampai Tanggal</label>
+                                    <input type="date" class="form-control" name="to_date" id="to_date" required>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary" id="submitFilter">Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 <table class="table table-bordered table-stripped" id="tabDelivery">
                     <thead>
                         <tr>
@@ -42,9 +61,69 @@
 </div>
 
 <script>
-    $('#addBtn').on('click', function() {
-        $('#addtab').slideToggle();
+    $('#filterBtn').on('click', function() {
+        $('#filterTab').slideToggle();
     });
+
+    let table;
+
+    function initializeDataTable(token) {
+        table = $('#tabDelivery').DataTable({
+            destroy: true,
+            processing: true,
+            serverSide: true,
+            responsive: true,
+            ajax: {
+                url: 'http://10.21.1.125:8000/api/delivery',
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: function(d) {
+                    d.from_date = $('#from_date').val();
+                    d.to_date = $('#to_date').val();
+                },
+            },
+            columns: [{
+                    data: 'id'
+                },
+                {
+                    data: 'sender_name'
+                },
+                {
+                    data: 'sender_address'
+                },
+                {
+                    data: 'recipient_address'
+                },
+                {
+                    data: 'recipient_name'
+                },
+                {
+                    data: 'sender_phone'
+                },
+                {
+                    data: 'recipient_phone'
+                },
+                {
+                    data: 'status',
+                    render: function(data, type, row) {
+                        let badgeClass = '';
+                        if (data === 'pending') {
+                            badgeClass = 'badge bg-warning';
+                        } else if (data === 'approved') {
+                            badgeClass = 'badge bg-success';
+                        } else {
+                            badgeClass = 'badge bg-secondary';
+                        }
+                        return `<span class="${badgeClass} text-capitalize">${data}</span>`;
+                    }
+                }
+            ]
+        });
+    }
 
     $(document).ready(function() {
         const token = localStorage.getItem('jwt_token');
@@ -59,7 +138,9 @@
                     Toast.fire({
                         icon: 'success',
                         title: 'You are on track'
-                    });
+                    }).then(() => {
+                        initializeDataTable(token);
+                    })
                 },
                 error: function(xhr) {
                     Toast.fire({
@@ -115,55 +196,11 @@
             })
         }
 
-        var table = $('#tabDelivery').DataTable({
-            ajax: {
-                url: 'http://10.21.1.125:8000/api/delivery',
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + token,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                dataType: 'json'
-            },
-            responsive: true,
-            serverside: true,
-            columns: [{
-                    data: 'id'
-                },
-                {
-                    data: 'sender_name'
-                },
-                {
-                    data: 'sender_address'
-                },
-                {
-                    data: 'recipient_address'
-                },
-                {
-                    data: 'recipient_name'
-                },
-                {
-                    data: 'sender_phone'
-                },
-                {
-                    data: 'recipient_phone'
-                },
-                {
-                    data: 'status',
-                    render: function(data, type, row) {
-                        let badgeClass = '';
-                        if (data === 'pending') {
-                            badgeClass = 'badge bg-danger'; // merah
-                        } else if (data === 'approved') {
-                            badgeClass = 'badge bg-success'; // hijau
-                        } else {
-                            badgeClass = 'badge bg-secondary'; // abu jika tidak dikenal
-                        }
-                        return `<span class="${badgeClass} text-capitalize">${data}</span>`;
-                    }
-                }
-            ],
+        $('#filter').on('submit', function(e) {
+            e.preventDefault();
+            if (table) {
+                table.ajax.reload(); // reload datatable berdasarkan input filter
+            }
         });
     });
 </script>
