@@ -1,0 +1,85 @@
+body {
+  background-color: #f5f7fa;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 300px;
+}
+
+.card-item {
+  border-radius: 12px;
+  padding: 15px;
+  color: #333;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  min-height: 80px;
+
+}
+
+.card-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.icon-large {
+  font-size: 40px;
+  opacity: 0.9;
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.menu-info {
+  flex-grow: 1;
+}
+
+.menu-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.menu-desc {
+  font-size: 13px;
+  margin: 3px 0 0;
+  color: #555;
+}
+
+/* Mild color variants */
+.mild-blue {
+  background-color: #7D0A0A;
+  color: #ffffff;
+}
+
+.mild-green {
+  background-color: #205781;
+  color: #ffffff;
+}
+
+.mild-purple {
+  background-color: #003092;
+  color: #ffffff;
+}
+
+.divider {
+  border-top: 1px solid #000000;
+  margin: 10px 0;
+}
