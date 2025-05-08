@@ -18,6 +18,31 @@
     <link rel="stylesheet" href="<?= base_url('public/css/v_login.css') ?>">
 </head>
 
+<style>
+    .loading-spinner {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 24px;
+        height: 24px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        z-index: 999;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
 <body>
     <div class="login-container" data-aos="fade-right">
         <div class="left-panel" data-aos="fade-left">
@@ -26,6 +51,7 @@
         <div class="right-panel" data-aos="fade-right">
             <h2>Welcome to <strong>CrudApi</strong></h2>
             <p>Test website for api and iframe</p>
+            <div id="loader" class="loading-spinner" style="display: none;"></div>
             <form id="loginForm" action="<?= base_url('login') ?>" method="POST">
                 <div id="alert" class="alert alert-danger" role="alert" style="display: none;"></div>
                 <div class="form-group">
@@ -35,6 +61,10 @@
                 <div class="form-group">
                     <span class="icon bx bxs-key"></span>
                     <input type="password" id="password" name="password" placeholder="Password" required>
+                </div>
+                <div class="form-group">
+                    <soan class="icon bx bxs-envelope"></soan>
+                    <input type="email" id="email" name="email" placeholder="Email, only use hyperdata.biz" required>
                 </div>
                 <button type="submit" class="login-btn" data-aos="fade-right">Log in</button>
             </form>
@@ -77,9 +107,12 @@
 
         $('#loginForm').on('submit', function(e) {
             e.preventDefault();
-    
+
             const username = $('#username').val();
             const password = $('#password').val();
+            const email = $('#email').val();
+
+            $('#loader').show(); // Tampilkan loader
 
             $.ajax({
                 type: 'POST',
@@ -87,58 +120,29 @@
                 dataType: 'json',
                 data: {
                     username,
-                    password
+                    password,
+                    email
                 },
                 success: function(response) {
-                    if (response.status === true && response.access_token) {
-                        localStorage.setItem('jwt_token', response.access_token);
-                        localStorage.setItem('user_id', response.user.id);
-                        localStorage.setItem('user_name', response.user.name);
-                        $.ajax({
-                            type: 'POST',
-                            url: '<?= base_url('LoginController/setSession') ?>',
-                            data: {
-                                user_id: response.user.id,
-                                user_name: response.user.name,
-                                jwt_token: response.access_token
-                            },
-                            xhrFields: {
-                                withCredentials: true // 
-                            },
-                            success: function(sessionResponse) {
-                                if (sessionResponse.status == true) {
-                                    Toast.fire({
-                                        icon: 'success',
-                                        title: 'Login Success',
-                                    }).then(() => {
-                                        window.location.href = response.redirect || "<?= base_url('dashboard') ?>";
-                                    });
-                                } else {
-                                    Toast.fire({
-                                        icon: 'error',
-                                        title: 'Login Failed',
-                                        text: 'Something went wrong, please try again.'
-                                    });
-                                }
-                            },
-                            error: function(xhr){
-                                Toast.fire({
-                                    icon: 'error',
-                                    title: 'Login Failed',
-                                    text: 'Password or username is incorrect'
-                                });
-                            }
+                    $('#loader').hide(); // Sembunyikan loader
+                    if (response.status === true) {
+                        localStorage.setItem('email', email);
+                        Toast.fire({
+                            icon: 'success',
+                            title: response.message
+                        }).then(() => {
+                            window.location.href = response.redirect || "<?= base_url('otp') ?>";
                         });
-
                     } else {
                         Toast.fire({
                             icon: 'error',
                             title: 'Login Failed',
-                            text: 'Something went wrong, please try again.'
-                        })
+                            text: response.message || 'Terjadi kesalahan'
+                        });
                     }
                 },
                 error: function(xhr) {
+                    $('#loader').hide();
                     Toast.fire({
                         icon: 'error',
                         title: 'Login Failed',
@@ -147,6 +151,7 @@
                 },
             });
         });
+
     });
 </script>
 </body>

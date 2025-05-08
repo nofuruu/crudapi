@@ -11,6 +11,7 @@ $routes->get('/', 'LoginController::index', ['filter' => 'noauth']);
 $routes->get('/login', 'LoginController::index', ['filter' => 'noauth']);
 $routes->post('/LoginController/setSession', 'LoginController::setSession', ['filter' => 'noauth']); // bisa diganti ke /login/setSession kalau mau rapi
 $routes->get('register', 'LoginController::register', ['filter' => 'noauth']);
+$routes->get('/otp', 'LoginController::verification',['filter' => 'noauth']);
 
 // Area yang butuh login
 $routes->get('/dashboard', 'Home::index', ['filter' => 'auth']);
@@ -23,3 +24,8 @@ $routes->get('/edit', 'ProdukController::edit', ['filter' => 'auth']);
 $routes->get('/delivery', 'DeliveryController::index', ['filter' => 'auth']);
 $routes->get('/add', 'DeliveryController::add', ['filter' => 'auth']);
 $routes->get('/deliveryapp', 'DeliveryApp::index', ['filter' => 'auth']);
+
+
+$routes->get('/peminjamankendaraan', 'PeminjamanKendaraan::index', ['filter' => 'auth']);
+$routes->get('/addkendaraan', 'Peminjamankendaraan::add', ['filter' => 'auth']);
+

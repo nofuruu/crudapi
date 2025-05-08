@@ -51,4 +51,9 @@ class LoginController extends BaseController
     {
         return view('Auth/v_register');
     }
+
+    public function verification()
+    {
+        return view('Auth/v_otp');
+    }
 }
