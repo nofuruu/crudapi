@@ -94,7 +94,8 @@
         </div>
         <div class="right-panel" data-aos="fade-left">
             <h2>Verifikasi Sistem</h2>
-            <p>Kami telah mengirimkan kode 6 digit ke email Anda.</p>
+            <p>Kami telah mengirimkan kode 6 digit ke <strong id="email"><strong></p>
+            <div class="timer"></div>
             <div class="otp-container">
                 <input type="text" id="otp1" class="otp-input" maxlength="1" oninput="moveFocus(this, 'otp2')" />
                 <input type="text" id="otp2" class="otp-input" maxlength="1" oninput="moveFocus(this, 'otp3')" />
@@ -103,112 +104,144 @@
                 <input type="text" id="otp5" class="otp-input" maxlength="1" oninput="moveFocus(this, 'otp6')" />
                 <input type="text" id="otp6" class="otp-input" maxlength="1" oninput="submitOtp()" />
             </div>
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-primary" id="verifyBtn">Verifikasi</button>
+            </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-    <script src="<?= base_url('public/js/toast.js') ?>"></script>
-
-    <script>
-        const email = localStorage.getItem('email');
-
-        AOS.init({
-            duration: 800,
-            once: true
-        });
-
-        function moveFocus(current, nextFieldId) {
-            if (current.value.length === current.maxLength) {
-                document.getElementById(nextFieldId).focus();
-            }
-        }
-
-        function getOtp() {
-            return [
-                $('#otp1').val(),
-                $('#otp2').val(),
-                $('#otp3').val(),
-                $('#otp4').val(),
-                $('#otp5').val(),
-                $('#otp6').val()
-            ].join('');
-        }
-
-        function verifyOtp(otp) {
-            $.ajax({
-                type: 'POST',
-                url: 'http://10.21.1.125:8000/api/verifyOtp',
-                data: {
-                    otp: otp,
-                    email: email
-                },
-                success: function(response) {
-                    if (response.status === true && response.access_token) {
-                        localStorage.setItem('jwt_token', response.access_token);
-                        localStorage.setItem('user_id', response.user.id);
-                        localStorage.setItem('user_name', response.user.name);
-
-                        $.ajax({
-                            type: 'POST',
-                            url: '<?= base_url('LoginController/setSession') ?>',
-                            data: {
-                                user_id: response.user.id,
-                                user_name: response.user.name,
-                                jwt_token: response.access_token
-                            },
-                            xhrFields: {
-                                withCredentials: true
-                            },
-                            success: function(sessionResponse) {
-                                if (sessionResponse.status === true) {
-                                    Toast.fire({
-                                        icon: 'success',
-                                        title: 'Verifikasi berhasil',
-                                        text: 'Login berhasil'
-                                    }).then(() => {
-                                        window.location.href = response.redirect || "<?= base_url('dashboard') ?>";
-                                    });
-                                } else {
-                                    Toast.fire({
-                                        icon: 'error',
-                                        title: 'Gagal set session',
-                                        text: sessionResponse.message || 'Coba lagi nanti'
-                                    });
-                                }
-                            },
-                            error: function(xhr) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Gagal set session (server error)',
-                                    text: xhr.responseText || 'Terjadi kesalahan server'
-                                });
-                            }
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'OTP Salah atau Expired',
-                            text: response.message || 'Kode OTP tidak valid'
-                        });
-                    }
-                },
-                error: function(xhr) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal Verifikasi OTP',
-                        text: xhr.responseJSON?.message || 'Kode OTP salah atau sudah tidak berlaku'
-                    });
-                }
-            });
-        }
-
-        function submitOtp() {
-            const otp = getOtp();
-            verifyOtp(otp);
-        }
-    </script>
 
 </body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script src="<?= base_url('public/js/toast.js') ?>"></script>
+
+<script>
+    const email = localStorage.getItem('email');
+
+    AOS.init({
+        duration: 800,
+        once: true
+    });
+
+    function moveFocus(current, nextFieldId) {
+        if (current.value.length === current.maxLength) {
+            document.getElementById(nextFieldId).focus();
+        }
+    }
+
+    function getOtp() {
+        return [
+            $('#otp1').val(),
+            $('#otp2').val(),
+            $('#otp3').val(),
+            $('#otp4').val(),
+            $('#otp5').val(),
+            $('#otp6').val()
+        ].join('');
+    }
+
+    function verifyOtp(otp) {
+        $.ajax({
+            type: 'POST',
+            url: 'http://10.21.1.125:8000/api/verifyOtp',
+            data: {
+                otp: otp,
+                email: email
+            },
+            success: function(response) {
+                if (response.status === true && response.access_token) {
+                    localStorage.setItem('jwt_token', response.access_token);
+                    localStorage.setItem('user_id', response.user.id);
+                    localStorage.setItem('user_name', response.user.name);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '<?= base_url('LoginController/setSession') ?>',
+                        data: {
+                            user_id: response.user.id,
+                            user_name: response.user.name,
+                            jwt_token: response.access_token
+                        },
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        success: function(sessionResponse) {
+                            if (sessionResponse.status === true) {
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: 'Verifikasi berhasil',
+                                    text: 'Login berhasil'
+                                }).then(() => {
+                                    window.location.href = response.redirect || "<?= base_url('dashboard') ?>";
+                                });
+                            } else {
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: 'Gagal set session',
+                                    text: sessionResponse.message || 'Coba lagi nanti'
+                                });
+                            }
+                        },
+                        error: function(xhr) {
+                            notify('error', xhr.responseText || 'Gagal set session');
+                            // Toast.fire({
+                            //     icon: 'error',
+                            //     title: 'Gagal set session (server error)',
+                            //     text: xhr.responseText || 'Terjadi kesalahan server'
+                            // });
+                        }
+                    });
+                } else {
+                    notify('error', response.message || 'Gagal set session');
+                }
+            },
+            error: function(xhr) {
+                notify('error', xhr.responseJSON?.message || 'Gagal set session');
+            }
+        });
+    }
+
+    let timeRemaining = 5 * 60; // 5 menit dalam detik
+
+    function updateTimer() {
+        let minutes = Math.floor(timeRemaining / 60);
+        let seconds = timeRemaining % 60;
+
+        // Format menit dan detik
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+
+        // Menampilkan waktu yang dihitung mundur
+        $('.timer').text(minutes + ':' + seconds);
+
+        if (timeRemaining > 0) {
+            timeRemaining--; // Kurangi waktu setiap detik
+        } else {
+            clearInterval(timerInterval); // Berhenti menghitung mundur jika waktu habis
+            alert("Waktu habis"); // Notifikasi jika waktu habis
+        }
+    }
+
+    function submitOtp() {
+        const otp = getOtp();
+        verifyOtp(otp);
+    }
+
+    $(document).ready(function() {
+        let timerInterval = setInterval(updateTimer, 1000);
+        const email = localStorage.getItem('email');
+        if (email) {
+            document.getElementById('email').textContent = email;
+        }
+
+        $('#verifyBtn').on('click', function() {
+            const otp = getOtp();
+            verifyOtp(otp);
+        });
+
+
+    });
+</script>
 
 </html>

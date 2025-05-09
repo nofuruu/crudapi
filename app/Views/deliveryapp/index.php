@@ -11,7 +11,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-stripped" id="tabDelivery">
+                <table class="table table-bordered table-stripped" id="tabDeliveryApproval">
                     <thead>
                         <tr>
                             <th>Id</th>
@@ -22,7 +22,6 @@
                             <th>Nomor Telepon Pengirim</th>
                             <th>Nomor Telepon Penerima</th>
                             <th>Status</th>
-                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="deliveryTab">
@@ -34,9 +33,64 @@
 </div>
 
 <script>
-    $('#addBtn').on('click', function() {
-        $('#addtab').slideToggle();
-    });
+    function initTable(token) {
+        tabe = $('#tabDeliveryApproval').DataTable({
+            destroy: true,
+            processing: true,
+            serverSide: true,
+            responsive: true,
+            ajax: {
+                url: 'http://10.21.1.125:8000/api/delivery',
+                type: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: function(d) {
+                    d.from_date = $('#from_date').val();
+                    d.to_date = $('#to_date').val();
+                },
+            },
+            columns: [{
+                    data: 'id'
+                },
+                {
+                    data: 'sender_name'
+                },
+                {
+                    data: 'sender_address'
+                },
+                {
+                    data: 'recipient_address'
+                },
+                {
+                    data: 'recipient_name'
+                },
+                {
+                    data: 'sender_phone'
+                },
+                {
+                    data: 'recipient_phone'
+                },
+                {
+                    data: 'status',
+                    render: function(data, type, row) {
+                        let badgeClass = '';
+                        if (data === 'pending') {
+                            badgeClass = 'badge bg-warning';
+                        } else if (data === 'approved') {
+                            badgeClass = 'badge bg-success';
+                        } else {
+                            badgeClass = 'badge bg-secondary';
+                        }
+                        return `<span class="${badgeClass} text-capitalize">${data}</span>`;
+                    }
+                }
+            ],
+            
+        });
+    }
 
     $(document).ready(function() {
         const token = localStorage.getItem('jwt_token');
@@ -51,7 +105,9 @@
                     Toast.fire({
                         icon: 'success',
                         title: 'You are on track'
-                    });
+                    }).then(() => {
+                        initTable(token);
+                    })
                 },
                 error: function(xhr) {
                     Toast.fire({
@@ -106,57 +162,6 @@
                 }
             })
         }
-
-        var table = $('#tabDelivery').DataTable({
-            ajax: {
-                url: 'http://10.21.1.125:8000/api/delivery',
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + token,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                dataType: 'json'
-            },
-            responsive: true,
-            serverside: true,
-            columns: [{
-                    data: 'id'
-                },
-                {
-                    data: 'sender_name'
-                },
-                {
-                    data: 'sender_address'
-                },
-                {
-                    data: 'recipient_address'
-                },
-                {
-                    data: 'recipient_name'
-                },
-                {
-                    data: 'sender_phone'
-                },
-                {
-                    data: 'recipient_phone'
-                },
-                {
-                    data: 'status',
-                    render: function(data, type, row) {
-                        let badgeClass = '';
-                        if (data === 'pending') {
-                            badgeClass = 'badge bg-danger'; // merah
-                        } else if (data === 'approved') {
-                            badgeClass = 'badge bg-success'; // hijau
-                        } else {
-                            badgeClass = 'badge bg-secondary'; // abu jika tidak dikenal
-                        }
-                        return `<span class="${badgeClass} text-capitalize">${data}</span>`;
-                    }
-                }
-            ],
-        });
     });
 </script>
 <?= $this->endSection() ?>

@@ -25,20 +25,6 @@ canvas {
   max-height: 300px;
 }
 
-.card-item {
-  border-radius: 12px;
-  padding: 15px;
-  color: #333;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  min-height: 80px;
-
-}
-
-.card-item:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
 
 .icon-large {
   font-size: 40px;
@@ -47,35 +33,25 @@ canvas {
   color: inherit;
 }
 
-.menu-info {
-  flex-grow: 1;
-}
-
 .menu-title {
   font-size: 16px;
   font-weight: 600;
   margin: 0;
 }
 
-.menu-desc {
-  font-size: 13px;
-  margin: 3px 0 0;
-  color: #555;
+/* Mild color variants */
+.mild-red {
+  background-color: #f82f2f;
+  color: #ffffff;
 }
 
-/* Mild color variants */
 .mild-blue {
-  background-color: #7D0A0A;
+  background-color: #1e89db;
   color: #ffffff;
 }
 
 .mild-green {
-  background-color: #205781;
-  color: #ffffff;
-}
-
-.mild-purple {
-  background-color: #003092;
+  background-color: #08cc2cfa;
   color: #ffffff;
 }
 
@@ -83,3 +59,4 @@ canvas {
   border-top: 1px solid #000000;
   margin: 10px 0;
 }
+

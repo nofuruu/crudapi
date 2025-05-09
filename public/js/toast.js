@@ -23,17 +23,30 @@ const Toast = Swal.mixin({
   },
 });
 
-function showToast(type = "info", message = "Something happened") {
+function notify(type = "info", message = "Something happened") {
   const iconColors = {
     success: "#22c55e", // Tailwind green-500
-    error: "#ef4444", // Tailwind red-500
+    error: "#ffffff", // Tailwind red-500
     warning: "#f59e0b", // Tailwind amber-500
     info: "#3b82f6", // Tailwind blue-500
   };
 
+  const backgroundColors = {
+    success: "#16a34a", // Tailwind green-700
+    error: "#dc2626", // Tailwind red-700
+    warning: "#f59e0b", // Tailwind amber-500
+    info: "#3b82f6", // Tailwind blue-500
+  };
+
+  const iconColor = iconColors[type] || "#3b82f6";
+  const backgroundColor = backgroundColors[type] || "#1f2937"; // Default background for 'info'
+
+  // Menampilkan toast sesuai dengan tipe
   Toast.fire({
     icon: type,
     title: message,
-    iconColor: iconColors[type] || "#3b82f6",
+    iconColor: iconColor,
+    background: backgroundColor, // Menyesuaikan background berdasarkan tipe
+    timer: 1500,
   });
 }

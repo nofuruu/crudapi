@@ -141,8 +141,8 @@
             <i class="bx bx-plus"></i>
         </li>
         <ul class="submenu" id="vehicleSubmenu">
-            <li><a href="<?= base_url('vehicle')?>">Peminjaman Kendaraan</a></li>
-            <li><a href="<?= base_url('vehicleapp')?>">Approval Peminjaman Kendaraan</a></li>
+            <li><a href="<?= base_url('peminjamankendaraan')?>">Peminjaman Kendaraan</a></li>
+            <li><a href="<?= base_url('addkendaraan')?>">Approval Peminjaman Kendaraan</a></li>
         </ul>
     </ul>
 </div>
