@@ -62,10 +62,6 @@
                     <span class="icon bx bxs-key"></span>
                     <input type="password" id="password" name="password" placeholder="Password" required>
                 </div>
-                <div class="form-group">
-                    <soan class="icon bx bxs-envelope"></soan>
-                    <input type="email" id="email" name="email" placeholder="Email, only use hyperdata.biz" required>
-                </div>
                 <button type="submit" class="login-btn" data-aos="fade-right">Log in</button>
             </form>
             <a href="<?= base_url('register') ?>" class="basic-link">Register</a>
@@ -110,9 +106,8 @@
 
             const username = $('#username').val();
             const password = $('#password').val();
-            const email = $('#email').val();
 
-            $('#loader').show(); // Tampilkan loader
+            $('#loader').show();
 
             $.ajax({
                 type: 'POST',
@@ -121,33 +116,22 @@
                 data: {
                     username,
                     password,
-                    email
                 },
                 success: function(response) {
-                    $('#loader').hide(); // Sembunyikan loader
+                    $('#loader').hide();
                     if (response.status === true) {
-                        localStorage.setItem('email', email);
-                        Toast.fire({
-                            icon: 'success',
-                            title: response.message
-                        }).then(() => {
-                            window.location.href = response.redirect || "<?= base_url('otp') ?>";
-                        });
+                        localStorage.setItem('userEmail', response.email);
+                        notify('success', 'Kode Verifikasi dikirim ke alamat email anda');
+                        setTimeout(() => {
+                            window.location.href = "<?= base_url('otp') ?>"
+                        }, 2000);
                     } else {
-                        Toast.fire({
-                            icon: 'error',
-                            title: 'Login Failed',
-                            text: response.message || 'Terjadi kesalahan'
-                        });
+                        notify('error', 'Terjadi Kesalahan Coba Lagi Nanti');
                     }
                 },
                 error: function(xhr) {
                     $('#loader').hide();
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Login Failed',
-                        text: 'Password or username is incorrect'
-                    });
+                    notify('error', 'Password or username incorrect');
                 },
             });
         });

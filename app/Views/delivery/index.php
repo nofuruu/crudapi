@@ -67,7 +67,7 @@
 
     let table;
 
-    function initializeDataTable(token) {
+    function initTable(token) {
         table = $('#tabDelivery').DataTable({
             destroy: true,
             processing: true,
@@ -139,7 +139,7 @@
                         icon: 'success',
                         title: 'You are on track'
                     }).then(() => {
-                        initializeDataTable(token);
+                        initTable(token);
                     })
                 },
                 error: function(xhr) {

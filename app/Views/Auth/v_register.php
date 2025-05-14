@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="<?= base_url('public/css/v_register.css') ?>">
     <title>Registration Form</title>
 </head>
+
 <body>
     <div class="container">
         <div class="panel">
@@ -25,20 +26,29 @@
             <p>Loading, please wait...</p>
         </div>
     </div>
-
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="<?= base_url('public/js/toast.js') ?>"></script>
-
+<script src="<?= base_url(relativePath: 'public/js/toast.js') ?>"></script>
 <script>
     window.addEventListener('message', function(event) {
-        if (event.data.event === 'true') {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-            setTimeout(function() {
-                window.location.href = "<?= base_url('/login') ?>";
-            }, 2000);
+        const data = event.data;
+
+        if (data.event === 'show-toast') {
+            Toast.fire({
+                icon: data.type || 'info',
+                title: data.message || 'Msg from iframe'
+            }).then(() => {
+                if (data.type === 'true') {
+                    setTimeout(function() {
+                        document.getElementById('loadingOverlay').style.display = 'flex';
+                        setTimeout(function() {
+                            window.location.href = "<?= base_url('/login') ?>";
+                        }, 2000);
+                    }, 1500);
+                }
+            });
         }
     });
 

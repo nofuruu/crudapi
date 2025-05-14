@@ -1,6 +1,6 @@
 const Toast = Swal.mixin({
   toast: true,
-  position: "top-start", // Lebih alami untuk notifikasi non-interupsi
+  position: "top-end", // Lebih alami untuk notifikasi non-interupsi
   showConfirmButton: false,
   showCloseButton: true,
   background: "#1f2937", // Warna abu gelap (Tailwind gray-800)
@@ -25,7 +25,7 @@ const Toast = Swal.mixin({
 
 function notify(type = "info", message = "Something happened") {
   const iconColors = {
-    success: "#22c55e", // Tailwind green-500
+    success: "#ffffff", // Tailwind green-500
     error: "#ffffff", // Tailwind red-500
     warning: "#f59e0b", // Tailwind amber-500
     info: "#3b82f6", // Tailwind blue-500

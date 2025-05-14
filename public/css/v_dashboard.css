@@ -1,6 +1,8 @@
 body {
   background-color: #f5f7fa;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin-left: 30px;
+  background-color: #1f2937;
 }
 
 .header {
@@ -8,11 +10,12 @@ body {
 }
 
 .card {
-  background-color: #ffffff;
+  background-color: #344cb7;
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
   padding: 20px;
   transition: transform 0.2s ease;
+  color: #ffffff;
 }
 
 .card:hover {
@@ -24,7 +27,6 @@ canvas {
   height: auto !important;
   max-height: 300px;
 }
-
 
 .icon-large {
   font-size: 40px;
@@ -51,7 +53,7 @@ canvas {
 }
 
 .mild-green {
-  background-color: #08cc2cfa;
+  background-color: #00a41efa;
   color: #ffffff;
 }
 
@@ -60,3 +62,37 @@ canvas {
   margin: 10px 0;
 }
 
+.profile-bar {
+  display: flex;
+  background-color: #344cb7;
+  color: #000000;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  transition: transform 0.2s ease;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-picture {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid #3b82f6;
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+/* Membuat teks berjejer vertikal */
+.profile-bar p,
+.profile-bar h3 {
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Optional: bisa diberi flex-column untuk teks jika ingin lebih eksplisit */
+.profile-bar p,
+.profile-bar h3 {
+  display: block;
+}

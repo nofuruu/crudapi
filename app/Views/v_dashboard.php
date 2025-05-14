@@ -2,48 +2,121 @@
 
 <?= $this->section('content') ?>
 
+<style>
+	.flip-card {
+		background-color: transparent;
+		height: 110px;
+		margin: auto;
+		perspective: 1000px;
+	}
+
+	.flip-card-inner {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		text-align: center;
+		transition: transform 0.6s ease-in-out;
+		transform-style: preserve-3d;
+	}
+
+	.flip-card:hover .flip-card-inner {
+		transform: rotateY(180deg);
+	}
+
+	.flip-card-front,
+	.flip-card-back {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		-webkit-backface-visibility: hidden;
+		backface-visibility: hidden;
+		border-radius: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+		transition: transform 0.3s ease;
+	}
+
+	.flip-card-front {
+		background-color: #e2f4e6;
+		z-index: 2;
+	}
+
+	.flip-card-back {
+		background-color: #d4edda;
+		transform: rotateY(180deg);
+		z-index: 1;
+	}
+</style>
+
 <head>
 	<title>Dashboard</title>
 	<link rel="stylesheet" href="<?= base_url('public/css/v_dashboard.css') ?>">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 </head>
 <div class="container mt-4">
-	<div class="header">
-		<h3>Welcome to <strong>CrudApi</strong>, <span id="userName"></span></h3>
+
+	<div class="profile-bar">
+		<div class="profile-picture">
+		</div>
+		<p>Welcome Back</p>
+		<h3>
+			<strong><span id="userName"></span></strong>
+		</h3>
+
+		<div class="img-container">
+			<!-- <img src="<?= base_url('public/images/dashboard.jpg')?>" alt="dashboard image"> -->
+		</div>
 	</div>
-	<div class="divider"></div>
+
 	<div class="content mt-3">
 		<div class="taskbar row g-3 mb-4">
 			<div class="col-md-4">
-				<div class="card card-item mild-blue d-flex align-items-center">
-					<div class="icon-large me-3">
-						<i class="fas fa-book"></i>
-					</div>
-					<div class="menu-info">
-						<h6 class="menu-title">Note</h6>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-md-4">
-				<div class="card card-item mild-green d-flex align-items-center">
-					<div class="icon-large me-3">
-						<i class="fas fa-user"></i>
-					</div>
-					<div class="menu-info">
-						<h6 class="menu-title">Manage User</h6>
+				<div class="flip-card">
+					<div class="flip-card-inner">
+						<div class="flip-card-front card card-item mild-green d-flex align-item-center justify-content-center flex-column">
+							<div class="icon-large me-3">
+								<i class="fas fa-handshake"></i>
+							</div>
+							<h6 class="menu-title">Sales Request</h6>
+						</div>
+						<div class="flip-card-back card card-item d-flex align-items-center justify-content-center flex-column">
+							<h4 id="salesRequest">Loading...</h4>
+						</div>
 					</div>
 				</div>
 			</div>
 
 			<div class="col-md-4">
-				<div class="card card-item mild-purple d-flex align-items-center">
-					<div class="icon-large me-3">
-						<i class="fas fa-box"></i>
+				<div class="flip-card">
+					<div class="flip-card-inner">
+						<div class="flip-card-front card card-item mild-blue d-flex align-items-center justify-content-center flex-column">
+							<div class="icon-large me-3">
+								<i class="fas fa-user"></i>
+							</div>
+							<h6 class="menu-title">Total User</h6>
+						</div>
+						<div class="flip-card-back card card-item d-flex align-items-center justify-content-center flex-column">
+							<h6>Total User</h6>
+							<h4 id="userCount">Loading...</h4>
+						</div>
 					</div>
-					<div class="menu-info">
-						<h6 class="menu-title">Dropship</h6>
-						<!-- <p class="menu-desc">Cek dan kelola pengiriman barang</p> -->
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="flip-card">
+					<div class="flip-card-inner">
+						<div class="flip-card-front card card-item mild-red d-flex align-items center justify-content-center flex-column">
+							<div class="icon-large me-3">
+								<i class="fas fa-box"></i>
+							</div>
+							<h6 class="menu-title">Total Delivery</h6>
+						</div>
+						<div class="flip-card-back card card-item d-flex align-items center justify-content center flex-column">
+							<h4 id="deliveryCount">Loading...</h4>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -127,38 +200,7 @@
 			}
 		}
 	});
-</script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- Javascript -->
-<script>
 	document.addEventListener('DOMContentLoaded', function() {
 		const userName = localStorage.getItem('user_name');
 		if (userName) {
@@ -233,6 +275,21 @@
 				}
 			})
 		}
+
+		$.ajax({
+			type: 'GET',
+			url: 'http://10.21.1.126:8000/api/users',
+			headers: {
+				'Authorization': 'Bearer ' + token
+			},
+			success: function(response) {
+				const userCount = Array.isArray(response) ? response.length : (response.total ?? 0);
+				$('#userCount').text(userCount + ' users');
+			},
+			error: function() {
+				$('#userCount').text('Error');
+			}
+		});
 	})
 </script>
 

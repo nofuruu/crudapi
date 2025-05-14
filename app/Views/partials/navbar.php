@@ -16,7 +16,7 @@
         z-index: 1050;
         position: fixed;
         top: 25px;
-        background-color: rgb(0, 68, 255);
+        background-color: #0044ff;
         color: rgb(255, 255, 255);
         border: none;
         border-radius: 20%;

@@ -117,7 +117,7 @@
 <script src="<?= base_url('public/js/toast.js') ?>"></script>
 
 <script>
-    const email = localStorage.getItem('email');
+    const email = localStorage.getItem('userEmail');
 
     AOS.init({
         duration: 800,
@@ -168,28 +168,16 @@
                         },
                         success: function(sessionResponse) {
                             if (sessionResponse.status === true) {
-                                Toast.fire({
-                                    icon: 'success',
-                                    title: 'Verifikasi berhasil',
-                                    text: 'Login berhasil'
-                                }).then(() => {
-                                    window.location.href = response.redirect || "<?= base_url('dashboard') ?>";
-                                });
+                                notify('success', 'Verifikasi Berhasil');
+                                setTimeout(() => {
+                                    window.location.href = "<?= base_url('dashboard') ?>"
+                                },2000);
                             } else {
-                                Toast.fire({
-                                    icon: 'error',
-                                    title: 'Gagal set session',
-                                    text: sessionResponse.message || 'Coba lagi nanti'
-                                });
+                                notify('error', 'Terjadi Kesalahan Coba Lagi Nanti');
                             }
                         },
                         error: function(xhr) {
                             notify('error', xhr.responseText || 'Gagal set session');
-                            // Toast.fire({
-                            //     icon: 'error',
-                            //     title: 'Gagal set session (server error)',
-                            //     text: xhr.responseText || 'Terjadi kesalahan server'
-                            // });
                         }
                     });
                 } else {
@@ -230,7 +218,7 @@
 
     $(document).ready(function() {
         let timerInterval = setInterval(updateTimer, 1000);
-        const email = localStorage.getItem('email');
+        const email = localStorage.getItem('userEmail');
         if (email) {
             document.getElementById('email').textContent = email;
         }

@@ -13,6 +13,15 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.dataTables.min.css">
 </head>
 
+<style>
+    body {
+        background-color: #f5f7fa;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin-left: 30px;
+        background-color: #1f2937;
+    }
+</style>
+
 <body>
 
     <!-- Navbar -->
